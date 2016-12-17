@@ -1,20 +1,20 @@
 <?php
 
-namespace Dkim\Signer;
+namespace Dkim\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class SignerFactory implements FactoryInterface {
+class Signer implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
 
-        return new Signer($serviceLocator->get('Config'));
+        return new \Dkim\Signer\Signer($serviceLocator->get('Config'));
     }
 
     public function __invoke(\Interop\Container\ContainerInterface $container, $requestedName, array $options = null) {
 
-        return new Signer($container->get('Config'));
+        return new \Dkim\Signer\Signer($container->get('Config'));
     }
 
 }
