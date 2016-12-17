@@ -36,7 +36,7 @@ Create a *./config/autoload/dkim.global.php* and *./config/autoload/dkim.local.p
     $mail->setSubject('subject');
     
     // sign message with dkim
-    $signer = $this->getServiceLocator()->get('DkimSigner');
+    $signer = $this->getServiceLocator()->get(\Dkim\Signer\Signer::class);
     $signer->signMessage($mail);
     
     // send message
