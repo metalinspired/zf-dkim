@@ -1,13 +1,19 @@
 README
 ========
 
-Zend Framework 2 DKIM Signer.
+Zend Framework DKIM Signer.
+
+**Note**
+
+I tried to contact the original author of this project, but he ignore me, so I decide to clone the project and continue to improve it.
+
+I will appreciate every contribution.
 
 **Installation**
 
 Installation of this module uses composer. For composer documentation, please refer to [https://getcomposer.org](https://getcomposer.org/ "getcomposer.org").
 
-<code>php composer.phar require fastnloud/zf2-dkim</code>
+<code>php composer.phar require joepsyko/zf-dkim</code>
 
 Create a *./config/autoload/dkim.global.php* and *./config/autoload/dkim.local.php* file with the configuration variable values as described in the project *.dist* files.
 
@@ -27,7 +33,7 @@ Create a *./config/autoload/dkim.global.php* and *./config/autoload/dkim.local.p
     $mail->setBody("Hello world!");
     $mail->setFrom('from@example.com');
     $mail->addTo('to@example.com');
-    $mail->setSubject('le subject');
+    $mail->setSubject('subject');
     
     // sign message with dkim
     $signer = $this->getServiceLocator()->get('DkimSigner');
