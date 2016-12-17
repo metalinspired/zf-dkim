@@ -2,8 +2,7 @@
     "name": "joepsyko/zf-dkim",
     "type": "library",
     "description": "DKIM Signer for Zend Mail",
-    "keywords": ["zf2", "dkim"],
-    "homepage": "https://github.com/fastnloud/zf2-dkim",
+    "keywords": ["zf", "zend framework", "dkim"],
     "license": "MIT",
     "authors": [
         {
