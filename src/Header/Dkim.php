@@ -4,7 +4,6 @@ namespace Dkim\Header;
 
 use Zend\Mail\Header\Exception\InvalidArgumentException;
 use Zend\Mail\Header\HeaderInterface;
-use Zend\Mail\Header\Exception;
 
 class Dkim implements HeaderInterface
 {
