@@ -12,8 +12,7 @@ use Zend\Mail\Header;
  * Signer.
  * @package Dkim\Signer
  */
-class Signer
-{
+class Signer {
 
     /**
      * All configurable params.
@@ -22,14 +21,13 @@ class Signer
      */
     private $params = array(
         // optional params having a default value set
-        'v'  => '1',
-        'a'  => 'rsa-sha1',
-
+        'v' => '1',
+        'a' => 'rsa-sha256',
         // required to set either in your config file or through the setParam method before signing (see
         // module.config.dist file)
-        'd'  => '', // domain
-        'h'  => '', // headers to sign
-        's'  => '', // domain key selector
+        'd' => '', // domain
+        'h' => '', // headers to sign
+        's' => '', // domain key selector
     );
 
     /**
@@ -60,8 +58,7 @@ class Signer
      * @throws \Exception
      * @return \Dkim\Signer\Signer
      */
-    public function __construct(array $options)
-    {
+    public function __construct(array $options) {
         if (!isset($options['dkim'])) {
             throw new \Exception("No 'dkim' config option set.");
         } else {
@@ -71,7 +68,7 @@ class Signer
                 $this->setPrivateKey($config['private_key']);
             }
 
-            if(isset($config['params']) && is_array($config['params']) && !empty($config['params'])) {
+            if (isset($config['params']) && is_array($config['params']) && !empty($config['params'])) {
                 foreach ($config['params'] as $key => $value) {
                     $this->setParam($key, $value);
                 }
@@ -85,8 +82,7 @@ class Signer
      * @param Message $message
      * @return void
      */
-    public function signMessage(Message &$message)
-    {
+    public function signMessage(Message &$message) {
         // format message
         $this->formatMessage($message);
 
@@ -111,8 +107,7 @@ class Signer
      * @throws \Exception
      * @return void
      */
-    public function setParam($key, $value)
-    {
+    public function setParam($key, $value) {
         if (!array_key_exists($key, $this->getParams())) {
             throw new \Exception("Invalid param '$key' given.");
         }
@@ -126,8 +121,7 @@ class Signer
      * @param array $params
      * @return void
      */
-    public function setParams(array $params)
-    {
+    public function setParams(array $params) {
         if (!empty($params)) {
             foreach ($params as $key => $value) {
                 $this->setParam($key, $value);
@@ -142,8 +136,7 @@ class Signer
      * @throws \Exception
      * @return void
      */
-    public function setPrivateKey($privateKey)
-    {
+    public function setPrivateKey($privateKey) {
         $privateKey = <<<PKEY
 -----BEGIN RSA PRIVATE KEY-----
 $privateKey
@@ -163,8 +156,7 @@ PKEY;
      * @param Message $message
      * @return void
      */
-    private function formatMessage(Message &$message)
-    {
+    private function formatMessage(Message &$message) {
         $body = $message->getBody();
 
         if ($body instanceof MimeMessage) {
@@ -182,8 +174,7 @@ PKEY;
      * @param string $string
      * @return string
      */
-    private function normalizeNewlines($string)
-    {
+    private function normalizeNewlines($string) {
         return trim(preg_replace('~\R~u', "\r\n", $string)) . "\r\n";
     }
 
@@ -193,18 +184,17 @@ PKEY;
      * @param Message $message
      * @return void
      */
-    private function canonizeHeaders(Message $message)
-    {
-        $params  = $this->getParams();
+    private function canonizeHeaders(Message $message) {
+        $params = $this->getParams();
         $headersToSign = explode(':', $params['h']);
 
         $headers = $message->getHeaders();
-        foreach($headers as $header) {
+        foreach ($headers as $header) {
             $fieldName = strtolower($header->getFieldName());
 
             if (in_array($fieldName, $headersToSign) || 'dkim-signature' == $fieldName) {
                 $this->appendCanonizedHeader(
-                    $fieldName . ':' . preg_replace('/\s+/', ' ', $header->getFieldValue(Header\HeaderInterface::FORMAT_ENCODED)) . "\r\n"
+                        $fieldName . ':' . preg_replace('/\s+/', ' ', $header->getFieldValue(Header\HeaderInterface::FORMAT_ENCODED)) . "\r\n"
                 );
             }
         }
@@ -217,8 +207,7 @@ PKEY;
      * @throws \Exception
      * @return void
      */
-    private function generateEmptyDkimHeader(Message $message)
-    {
+    private function generateEmptyDkimHeader(Message $message) {
         // fetch configurable params
         $configurableParams = $this->getParams();
 
@@ -229,14 +218,14 @@ PKEY;
 
         // final params
         $params = array(
-            'v'    => $configurableParams['v'],
-            'a'    => $configurableParams['a'],
-            'bh'   => $this->getBodyHash($message),
-            'c'    => 'relaxed',
-            'd'    => $configurableParams['d'],
-            'h'    => $configurableParams['h'],
-            's'    => $configurableParams['s'],
-            'b'    => ''
+            'v' => $configurableParams['v'],
+            'a' => $configurableParams['a'],
+            'bh' => $this->getBodyHash($message),
+            'c' => 'relaxed',
+            'd' => $configurableParams['d'],
+            'h' => $configurableParams['h'],
+            's' => $configurableParams['s'],
+            'b' => ''
         );
 
         $string = '';
@@ -245,7 +234,7 @@ PKEY;
         }
 
         // set empty dkim header
-        $this->setEmptyDkimHeader(new Dkim(substr(trim($string),0, -1)));
+        $this->setEmptyDkimHeader(new Dkim(substr(trim($string), 0, -1)));
     }
 
     /**
@@ -254,8 +243,7 @@ PKEY;
      * @return string
      * @throws \Exception
      */
-    private function generateSignature()
-    {
+    private function generateSignature() {
         if (!$this->getPrivateKey()) {
             throw new \Exception('No private key given.');
         }
@@ -272,8 +260,7 @@ PKEY;
      * @param Message $message
      * @return void
      */
-    private function sign(Message &$message)
-    {
+    private function sign(Message &$message) {
         // generate signature
         $signature = $this->generateSignature();
 
@@ -285,7 +272,7 @@ PKEY;
 
         // then append existing headers
         $headers = $message->getHeaders();
-        foreach($headers as $header) {
+        foreach ($headers as $header) {
             $headerSet[] = $header;
         }
 
@@ -301,8 +288,7 @@ PKEY;
      *
      * @return array
      */
-    private function getParams()
-    {
+    private function getParams() {
         return $this->params;
     }
 
@@ -312,8 +298,7 @@ PKEY;
      * @param \Dkim\Header\Dkim $emptyDkimHeader
      * @return void
      */
-    private function setEmptyDkimHeader(Dkim $emptyDkimHeader)
-    {
+    private function setEmptyDkimHeader(Dkim $emptyDkimHeader) {
         $this->emptyDkimHeader = $emptyDkimHeader;
     }
 
@@ -322,8 +307,7 @@ PKEY;
      *
      * @return GenericHeader
      */
-    private function getEmptyDkimHeader()
-    {
+    private function getEmptyDkimHeader() {
         return $this->emptyDkimHeader;
     }
 
@@ -334,8 +318,7 @@ PKEY;
      * @param $canonizedHeader
      * @return void
      */
-    private function appendCanonizedHeader($canonizedHeader)
-    {
+    private function appendCanonizedHeader($canonizedHeader) {
         $this->setCanonizedHeaders($this->canonizedHeaders . $canonizedHeader);
     }
 
@@ -345,8 +328,7 @@ PKEY;
      * @param $canonizedHeaders
      * @return void
      */
-    private function setCanonizedHeaders($canonizedHeaders)
-    {
+    private function setCanonizedHeaders($canonizedHeaders) {
         $this->canonizedHeaders = $canonizedHeaders;
     }
 
@@ -355,20 +337,18 @@ PKEY;
      *
      * @return string
      */
-    private function getCanonizedHeaders()
-    {
+    private function getCanonizedHeaders() {
         return trim($this->canonizedHeaders);
     }
 
     /**
-     * Get Message body (sha1) hash.
+     * Get Message body (sha256) hash.
      *
      * @param Message $message
      * @return string
      */
-    private function getBodyHash(Message $message)
-    {
-        return base64_encode(pack("H*", sha1($message->getBody())));
+    private function getBodyHash(Message $message) {
+        return base64_encode(pack("H*", hash('sha256', $message->getBody())));
     }
 
     /**
@@ -376,8 +356,7 @@ PKEY;
      *
      * @return OpenSSL key
      */
-    private function getPrivateKey()
-    {
+    private function getPrivateKey() {
         return $this->privateKey;
     }
 
