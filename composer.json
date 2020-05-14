@@ -1,4 +1,4 @@
-i{
+{
     "name": "metalinspired/zf-dkim",
     "type": "library",
     "description": "DKIM Signer for Zend Mail",
