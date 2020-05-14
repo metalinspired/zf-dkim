@@ -1,5 +1,5 @@
-{
-    "name": "joepsyko/zf-dkim",
+i{
+    "name": "metalinspired/zf-dkim",
     "type": "library",
     "description": "DKIM Signer for Zend Mail",
     "keywords": ["zf", "zend framework", "dkim"],
@@ -11,6 +11,8 @@
             "homepage": "http://www.jaapsblog.nl"
         }, {
             "name": "Giovanni Iembo"
+        }, {
+            "name": "Milan Divkovic"
         }
     ],
     "require": {
